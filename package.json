@@ -1,0 +1,8 @@
+{
+  "name": "eb_docker_test",
+  "private": true,
+  "version": "0.0.1",
+  "dependencies": {
+    "express": "3.2.4"
+  }
+}
