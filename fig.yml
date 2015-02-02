@@ -1,8 +1,8 @@
 web:
   build: .
-  command: nodejs /opt/app/index.js
+  command: /opt/app/index.js
   ports:
     - "8080:8080"
 worker:
   build: .
-  command: nodejs /opt/app/worker.js
+  command: /opt/app/worker.js

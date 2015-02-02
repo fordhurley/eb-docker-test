@@ -9,3 +9,10 @@ RUN mkdir -p /opt/app && cp -a /tmp/node_modules /opt/app/
 
 WORKDIR /opt/app
 ADD . /opt/app
+
+EXPOSE 8080
+
+ENTRYPOINT ["nodejs"]
+
+# The following is only relevant on elastic beanstalk for the web service. fig will override it.
+CMD ["/opt/app/index.js"]
