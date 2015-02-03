@@ -52,7 +52,7 @@ print '->', instance
 print 'Waiting for instance to start'
 status = 'pending'
 while status == 'pending':
-    time.sleep(1)
+    time.sleep(2)
     status = instance.update()
 print status
 
