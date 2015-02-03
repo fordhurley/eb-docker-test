@@ -1,6 +1,7 @@
-function sayHi() {
-    console.log('Hi,', process.env.NAME, 'at', Date.now());
-    setTimeout(sayHi, 5000);
+function greet() {
+    msg = process.env.GREETING + ', ' + process.env.NAME + ' at ' + Date.now()
+    console.log(msg);
+    setTimeout(greet, 5000);
 }
 
-sayHi()
+greet()

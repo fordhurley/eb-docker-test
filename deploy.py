@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 
+import json
 import os
 import pprint
 import time
@@ -7,15 +8,24 @@ import uuid
 
 import boto.ec2
 
+# boto will look for AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY env vars.
+KEY_NAME = os.environ['KEY_NAME']
+TAG_NAME = os.environ['TAG_NAME']
+DOCKER_ENV = json.loads(os.environ['DOCKER_ENV'])
+
 startup_script = '''#!/bin/sh
 set -e
 sudo apt-get update
 sudo apt-get install -y docker.io
-sudo docker.io run -d -i fordhurley/eb-docker-test nodejs worker.js
 '''
 
-# boto will look for AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY env vars.
-KEY_NAME = os.environ['KEY_NAME']
+context = {
+    'image': 'fordhurley/eb-docker-test:' + TAG_NAME,
+    'cmd': 'nodejs worker.js',
+    'env': ' '.join('-e {k}={v}'.format(k=k, v=v) for k, v in DOCKER_ENV.iteritems()),
+}
+run_command = 'sudo docker.io run -d {env} {image} {cmd}'.format(**context)
+startup_script += '\n' + run_command + '\n'
 
 conn = boto.ec2.connect_to_region('us-east-1')
 
@@ -40,7 +50,7 @@ instance = res.instances[0]
 print '->', instance
 
 print 'Waiting for instance to start'
-status = instance.update()
+status = 'pending'
 while status == 'pending':
     time.sleep(1)
     status = instance.update()
